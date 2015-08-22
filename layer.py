@@ -20,6 +20,8 @@ from yowsup.layers.protocol_messages.protocolentities import \
     TextMessageProtocolEntity
 from yowsup.layers.protocol_receipts.protocolentities import \
     OutgoingReceiptProtocolEntity
+from yowsup.layers.protocol_acks.protocolentities import \
+    OutgoingAckProtocolEntity
 
 
 class WhatsappTunnel(YowInteraLayer):
@@ -40,3 +42,9 @@ class WhatsappTunnel(YowInteraLayer):
 
         self.toLower(receipt)
         self.toLower(outgoingMessageProtocolEntity)
+
+    @ProtocolEntityCallback("receipt")
+    def onReceipt(self, entity):
+        """Called when received an ACK."""
+        ack = OutgoingAckProtocolEntity(entity.getId(), 'receipt')
+        self.toLower(ack)
