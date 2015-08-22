@@ -15,24 +15,28 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from yowsup.layers import YowLayer
+from yowsup.layers.interface import YowInterfaceLayer, ProtocolEntityCallback
 from yowsup.layers.protocol_messages.protocolentities import \
     TextMessageProtocolEntity
+from yowsup.layers.protocol_receipts.protocolentities import \
+    OutgoingReceiptProtocolEntity
 
 
-class WhatsappLayer(YowLayer):
+class WhatsappTunnel(YowInteraLayer):
 
-    """Application Whatsapp Layer."""
+    """Whatsapp host of the tunnel."""
 
-    def receive(self, protocolEntity):
-        """Called when received a packet."""
-        if protocolEntity.getTag() == "message":
-            self.onMessage(protocolEntity)
-
-    def onMessage(self, messageProtocolEntity):
+    @ProtocolEntityCallback("message")
+    def onMessage(self, msgProtocolEntity):
         """Called when received a message."""
-        outgoingMessageProtocolEntity = TextMessageProtocolEntity(
-            messageProtocolEntity.getBody(),
-            to=messageProtocolEntity.getFrom())
+        rcp = OutgoingReceiptProtocolEntity(msgProtocolEntity.getId(),
+                                            msgProtocolEntity.getFrom(),
+                                            'read',
+                                            msgProtocolEntity.getParticipant())
 
+        outgoingMessageProtocolEntity = TextMessageProtocolEntity(
+            msgProtocolEntity.getBody(),
+            to=msgProtocolEntity.getFrom())
+
+        self.toLower(receipt)
         self.toLower(outgoingMessageProtocolEntity)
