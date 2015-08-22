@@ -15,16 +15,22 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from layer import WhatsappTunnel
-from yowsup.layers.auth import YowAuthenticationProtocolLayer
+from yowsup.layers import YowParallelLayer
+from yowsup.layers.auth import YowAuthenticationProtocolLayer, \
+    YowCryptLayer
 from yowsup.layers.protocol_messages import YowMessagesProtocolLayer
 from yowsup.layers.protocol_receipts import YowReceiptProtocolLayer
+from yowsup.layers.protocol_media import YowMediaProtocolLayer
 from yowsup.layers.protocol_acks import YowAckProtocolLayer
 from yowsup.layers.network import YowNetworkLayer
+from yowsup.layers.axolotl import YowAxolotlLayer
 from yowsup.layers.coder import YowCoderLayer
+from yowsup.layers.stanzaregulator import YowStanzaRegulator
+from yowsup.layers.logger import YowLoggerLayer
 from yowsup.stacks import YowStack
 from yowsup.common import YowConstants
 from yowsup.layers import YowLayerEvent
-from yowsup.stacks import YowStack, YOWSUP_CORE_LAYERS
+from yowsup.stacks import YowStack
 from yowsup import env
 import os
 
@@ -34,10 +40,21 @@ CREDENTIALS = (PHONE, PWD)
 
 if __name__ == "__main__":
     layers = (
-            WhatsappTunnel,
-            (YowAuthenticationProtocolLayer, YowMessagesProtocolLayer,
-             YowReceiptProtocolLayer, YowAckProtocolLayer)
-             ) + YOWSUP_CORE_LAYERS
+        WhatsappTunnel,
+        YowParallelLayer((
+            YowAckProtocolLayer,
+            YowAuthenticationProtocolLayer,
+            YowMediaProtocolLayer,
+            YowMessagesProtocolLayer,
+            YowReceiptProtocolLayer,
+        )),
+        YowAxolotlLayer,
+        YowLoggerLayer,
+        YowCoderLayer,
+        YowCryptLayer,
+        YowStanzaRegulator,
+        YowNetworkLayer
+    )
 
     stack = YowStack(layers)
 

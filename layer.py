@@ -42,11 +42,12 @@ class WhatsappTunnel(YowInterfaceLayer):
 
         print(msgProtocolEntity.getBody())
         print(msgProtocolEntity.getFrom())
-        #self.toLower(receipt)
-        #self.toLower(outgoingMessageProtocolEntity)
+        self.toLower(rcp)
+        # self.toLower(outgoingMessageProtocolEntity)
 
     @ProtocolEntityCallback("receipt")
     def onReceipt(self, entity):
         """Called when received an ACK."""
-        ack = OutgoingAckProtocolEntity(entity.getId(), 'receipt', entity.getType(), entity.getFrom())
-        #self.toLower(ack)
+        ack = OutgoingAckProtocolEntity(entity.getId(), 'receipt',
+                                        entity.getType(), entity.getFrom())
+        self.toLower(ack)
