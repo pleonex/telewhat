@@ -24,7 +24,7 @@ from yowsup.layers.protocol_acks.protocolentities import \
     OutgoingAckProtocolEntity
 
 
-class WhatsappTunnel(YowInteraLayer):
+class WhatsappTunnel(YowInterfaceLayer):
 
     """Whatsapp host of the tunnel."""
 
@@ -40,11 +40,13 @@ class WhatsappTunnel(YowInteraLayer):
             msgProtocolEntity.getBody(),
             to=msgProtocolEntity.getFrom())
 
-        self.toLower(receipt)
-        self.toLower(outgoingMessageProtocolEntity)
+        print(msgProtocolEntity.getBody())
+        print(msgProtocolEntity.getFrom())
+        #self.toLower(receipt)
+        #self.toLower(outgoingMessageProtocolEntity)
 
     @ProtocolEntityCallback("receipt")
     def onReceipt(self, entity):
         """Called when received an ACK."""
-        ack = OutgoingAckProtocolEntity(entity.getId(), 'receipt')
-        self.toLower(ack)
+        ack = OutgoingAckProtocolEntity(entity.getId(), 'receipt', entity.getType(), entity.getFrom())
+        #self.toLower(ack)

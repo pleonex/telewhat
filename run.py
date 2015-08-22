@@ -28,8 +28,8 @@ from yowsup.stacks import YowStack, YOWSUP_CORE_LAYERS
 from yowsup import env
 import os
 
-PHONE = os.environ("WHATSAPP_PHONE")
-PWD = os.environ("WHATSAPP_PWD")
+PHONE = os.environ["WHATSAPP_PHONE"]
+PWD = os.environ["WHATSAPP_PWD"]
 CREDENTIALS = (PHONE, PWD)
 
 if __name__ == "__main__":
